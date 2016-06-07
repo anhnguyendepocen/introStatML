@@ -3,3 +3,4 @@
 export(blackbox01)
 export(coin_flips)
 export(dice_rolls)
+export(runExample)
