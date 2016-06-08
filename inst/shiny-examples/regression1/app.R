@@ -18,6 +18,18 @@ bth <- function(pts, dfit) {
   pbt
 }
 
+opt_bt <- function(dat, dfit, choice) {
+  x <- dat$x; y <- dat$y
+  X <- do.call(cbind, lapply(0:dfit, function(i) x^i))
+  pow <- switch(choice, "Squared" = 2, "Absolute" = 1)
+  of <- function(bt) {
+    yh <- as.numeric(X %*% bt)
+    sum(abs(yh - y)^pow)
+  }
+  res <- nlm(of, rep(0, dfit + 1))
+  res$estimate
+}
+
 shinyApp(
   ui = fluidPage(
     sidebarLayout(
@@ -82,6 +94,11 @@ shinyApp(
         xs <- do.call(cbind, lapply(0:dfit, function(i) tab$x^i))
         tab$fit.y <- floor(as.numeric(xs %*% bth) * RESO2)/RESO2
       }
+      if (!input$fit_pts && input$fit_opt) {
+        bth <- opt_bt(tab, dfit, input$fit_choice)
+        xs <- do.call(cbind, lapply(0:dfit, function(i) tab$x^i))
+        tab$fit.y <- floor(as.numeric(xs %*% bth) * RESO2)/RESO2
+      }
       if (input$fit_sse && "fit.y" %in% names(tab)) {
         tab$diff <- tab$y - tab$fit.y
         if (input$fit_choice == "Squared") {
@@ -143,9 +160,18 @@ shinyApp(
         ptz <- curPoints()
         sx <- seq(MIN_X, MAX_X, length.out = 100)
         sX <- do.call(cbind, lapply(0:dfit, function(i) sx^i))
-        sy <- as.numeric(sX %*% bth(ptz, dfit))
+        btH <- bth(ptz, dfit)
+        sy <- as.numeric(sX %*% btH)
         lines(sx, sy, col = "blue")
-        title(eqstr(bth(ptz, dfit)))
+        title(eqstr(btH))
+      }
+      if (!input$fit_pts && input$fit_opt) {
+        sx <- seq(MIN_X, MAX_X, length.out = 100)
+        sX <- do.call(cbind, lapply(0:dfit, function(i) sx^i))
+        btH <- opt_bt(dat, dfit, input$fit_choice)
+        sy <- as.numeric(sX %*% btH)
+        lines(sx, sy, col = "green")
+        title(eqstr(btH))
       }
     })
     output$mytable <- DT::renderDataTable({
