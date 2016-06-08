@@ -6,55 +6,32 @@ MAX_X <- 2
 
 shinyApp(
   ui = fluidPage(
-    # Some custom CSS
-    tags$head(
-      tags$style(
-        HTML(
-          "
-           .option-group {
-           border: 1px solid #ccc;
-           border-radius: 6px;
-           padding: 0px 5px;
-           margin: 5px -10px;
-           background-color: #f5f5f5;
-           }
-
-           .option-header {
-           color: #79d;
-           text-transform: uppercase;
-           margin-bottom: 5px;
-           }
-          "
-        )
+    sidebarLayout(
+      sidebarPanel(
+        tabsetPanel(
+          id = "controls",
+          tabPanel("Generation",
+                   numericInput("par_n", "N: ", 10),
+                   selectInput("par_d", "True degree: ", choices = 0:3,
+                               selected = 1),
+                   selectInput("par_distro", "Noise type: ", choices = c("Normal", "Laplacian", "Cauchy"),
+                               selected = "Normal"),
+                   numericInput("par_sigma", "noise:", 1),
+                   numericInput("par_seed", "seed: ", 0)
+                   ),
+          tabPanel("Fit",
+                   selectInput("fit_d", "Degree: ", choices = 0:3,
+                               selected = 1),
+                   selectInput("fit_d", "Objective: ",
+                               choices = c("Absolute", "Squared"),
+                               selected = "Squared"),
+                   checkboxInput("fit_sse", "Show objective", FALSE),
+                   checkboxInput("fit_opt", "Show optimal fit", FALSE)
+                   ))
+      ),
+      mainPanel(
+        uiOutput("plotUI1")
       )
-    ),
-    fluidRow(
-      column(width = 3,
-             div(class = "option-group",
-                 div(class = "option-header", "Generation"),
-                 numericInput("par_n", "N: ", 10),
-                 selectInput("par_d", "True degree: ", choices = 0:3,
-                            selected = 1),
-                 selectInput("par_distro", "Noise type: ", choices = c("Normal", "Laplacian", "Cauchy"),
-                             selected = "Normal"),
-                 numericInput("par_sigma", "noise:", 1),
-                 numericInput("par_seed", "seed: ", 0)
-             )),
-      column(width = 3,
-             div(class = "option-group",
-                 div(class = "option-header", "Fit"),
-                 selectInput("fit_d", "Degree: ", choices = 0:3,
-                             selected = 1),
-                 selectInput("fit_d", "Objective: ",
-                             choices = c("Absolute", "Squared"),
-                             selected = "Squared"),
-                 checkboxInput("fit_sse", "Show objective", FALSE),
-                 checkboxInput("fit_opt", "Show optimal fit", FALSE)
-             ))
-    ),
-    fluidRow(
-      column(width = 6,
-             uiOutput("plotUI1"))
     )
   ),
 
