@@ -30,13 +30,13 @@ shinyApp(
                                selected = 1),
                    selectInput("par_distro", "Noise type: ", choices = c("Normal", "Laplacian", "Cauchy"),
                                selected = "Normal"),
-                   numericInput("par_sigma", "noise:", 1),
+                   numericInput("par_sigma", "noise:", 0.1),
                    numericInput("par_seed", "seed: ", 0)
                    ),
           tabPanel("Fit",
                    selectInput("fit_d", "Degree: ", choices = 0:3,
                                selected = 1),
-                   selectInput("fit_d", "Objective: ",
+                   selectInput("fit_choice", "Objective: ",
                                choices = c("Absolute", "Squared"),
                                selected = "Squared"),
                    checkboxInput("fit_pts", "Manually select points", FALSE),
@@ -82,6 +82,25 @@ shinyApp(
         xs <- do.call(cbind, lapply(0:dfit, function(i) tab$x^i))
         tab$fit.y <- floor(as.numeric(xs %*% bth) * RESO2)/RESO2
       }
+      if (input$fit_sse && "fit.y" %in% names(tab)) {
+        tab$diff <- tab$y - tab$fit.y
+        if (input$fit_choice == "Squared") {
+          tab$squared <- tab$diff^2
+        }
+        if (input$fit_choice == "Absolute") {
+          tab$abs <- abs(tab$diff)
+        }
+        tcost <- sum(tab[, 5])
+        tab[, 5] <- floor(tab[, 5] * RESO2)/RESO2
+        tot <- tab[1, ]
+        tot[[1]] <- NA
+        tot[[2]] <- NA
+        tot[[3]] <- NA
+        tot[[4]] <- NA
+        tot[[5]] <- tcost
+        tab <- rbind(total = tot, tab)
+        rownames(tab) <- c("total", paste(1:(nrow(tab) - 1)))
+      }
       tab
     })
     curPoints <- reactive({
@@ -102,7 +121,7 @@ shinyApp(
     })
     output$plotUI1 <- renderUI({
       plotOutput("plot1", height = 400,
-                 click = "plot1_click")
+                 click = "plot1_click", dblclick = "plot1_dbl")
     })
     output$plot1 <- renderPlot({
       dat <- curData()
