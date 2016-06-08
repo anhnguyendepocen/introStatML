@@ -21,7 +21,7 @@ bth <- function(pts, dfit) {
 opt_bt <- function(dat, dfit, choice) {
   x <- dat$x; y <- dat$y
   X <- do.call(cbind, lapply(0:dfit, function(i) x^i))
-  pow <- switch(choice, "Squared" = 2, "Absolute" = 1)
+  pow <- switch(choice, "Squared" = 2, "Absolute" = 1.01)
   of <- function(bt) {
     yh <- as.numeric(X %*% bt)
     sum(abs(yh - y)^pow)
