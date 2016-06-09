@@ -1,6 +1,7 @@
 #' Runs shiny example
 #' 
 #' @param appName App name
+#' @import shiny
 #' @export
 runExample <- function(appName = c("testApp", "regression1")) {
   appName <- appName[1]
