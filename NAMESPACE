@@ -3,5 +3,8 @@
 export(blackbox01)
 export(coin_flips)
 export(dice_rolls)
+export(ma_unif)
+export(ma_unif_filt)
 export(runExample)
+export(taste_test_ts)
 import(shiny)
