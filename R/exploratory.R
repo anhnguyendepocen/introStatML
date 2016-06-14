@@ -20,3 +20,18 @@ roll_data <- function(rolls = 1:99, print = TRUE) {
   }
   roll2014votes[, c(2:3, rolls + 3)]
 }
+
+#' Plot polynomial a + b * x + c * x^2 + d * x^3
+#'
+#' @param a intercept
+#' @param b x term
+#' @param c x^2 term
+#' @param d x^3 term
+#' @export
+abpoly <- function(a = 0, b = 0, c = 0, d = 0, ...) {
+  xl <- par("usr")[1:2]
+  xs <- seq(xl[1], xl[2], length.out = 200)
+  ys <- a + b * xs + c * xs^2 + d * xs^3
+  lines(xs, ys, ...)
+}
+
