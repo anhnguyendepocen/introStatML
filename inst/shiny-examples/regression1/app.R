@@ -3,7 +3,7 @@ DIST_THRES <- 0.1
 MIN_X <- -2
 MAX_X <- 2
 RESO <- 10
-RESO2 <- 100
+RESO2 <- 10000
 pts <- cbind(c(1/6, 5/6, 3/6, 2/6, 4/6) * (MAX_X - MIN_X) + MIN_X, 0)
 
 xterms <- c("", " * x", " * x^2", " * x^3", " * x^4", " * x^4")
