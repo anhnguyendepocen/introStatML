@@ -3,6 +3,7 @@
 export(abpoly)
 export(blackbox01)
 export(coin_flips)
+export(data_split)
 export(dice_rolls)
 export(ma_unif)
 export(ma_unif_filt)

@@ -35,3 +35,20 @@ abpoly <- function(a = 0, b = 0, c = 0, d = 0, ...) {
   lines(xs, ys, ...)
 }
 
+#' Split a data frame into training a test sets
+#'
+#' @param tab The data frame
+#' @param frac Fraction of data for training set (will be rounded up)
+#' @param seed Random seed
+#' @return A list with train and test components
+#' @export
+data_split <- function(tab, frac = 0.5, seed = NULL) {
+  n <- nrow(tab)
+  if (!is.null(seed)) set.seed(seed)
+  inds <- sort(sample(n, ceiling(frac * n), replace = FALSE))
+  ans <- list()
+  ans$train <- tab[inds, ]
+  ans$test <- tab[-inds, ]
+  ans
+}
+
